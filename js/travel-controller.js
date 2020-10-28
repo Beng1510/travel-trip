@@ -3,8 +3,9 @@
 
 import {mapService} from './travel-service.js'
 
-
+var gPlaces;
 var gMap;
+
 console.log('Main!');
 
 mapService.getLocs()
@@ -34,18 +35,48 @@ document.querySelector('.btn').addEventListener('click', (ev) => {
 })
 
 
-export function initMap(lat = 32.0749831, lng = 34.9120554) {
+export function initMap() {
+
+var myLatlng = {lat: 32.0749831, lng: 34.9120554}
+
     console.log('InitMap');
+
     return _connectGoogleApi()
         .then(() => {
             console.log('google available');
             gMap = new google.maps.Map(
                 document.querySelector('#map'), {
-                center: { lat, lng },
+                center: myLatlng,
                 zoom: 15
             })
-            console.log('Map!', gMap);
+            // console.log('Map!', gMap);
+            
+           
         })
+
+
+}
+
+document.querySelector('#map').addEventListener('click',getNewLocation)
+
+
+
+function getNewLocation() {
+
+    gMap.addListener('click', function (mapsMouseEvent) {
+        console.log('mapsMouseEvent',mapsMouseEvent);
+        myLatlng = {
+            lat: mapsMouseEvent.latLng.lat(),
+            lng: mapsMouseEvent.latLng.lng()
+        }
+        
+        console.log('myLatlng',myLatlng);
+
+        var name = prompt('Enter place name:');
+
+        addLocation(name, myLatlng);
+        gMap.setCenter(myLatlng);
+    });
 }
 
 function addMarker(loc) {
@@ -73,7 +104,7 @@ function getPosition() {
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    const API_KEY = ''; //TODO: Enter your API Key
+    const API_KEY = '';
     var elGoogleApi = document.createElement('script');
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y&callback=mapReady`;
     elGoogleApi.async = true;
@@ -86,4 +117,17 @@ function _connectGoogleApi() {
 }
 
 
+function addLocation(name, latLng){
+    var newPlace = _createPlace(name, latLng);
+    gPlaces.push(newPlace);
+    // saveToStorage(PLACES_DB,gPlaces);
+    onAddPlace();
+}
 
+function _createPlace(name, latLng){
+    return {
+        id: makeId(),
+        name,
+        latLng
+    }
+}
