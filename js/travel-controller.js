@@ -160,8 +160,6 @@ function renderLocationList() {
     delBtns.forEach(delBtn => {
         delBtn.addEventListener('click', onDeleteLoc)
     } )
-
-
 }
 
 
@@ -178,3 +176,16 @@ function onDeleteLoc(ev) {
     mapService.deleteLoc(ev)
     renderLocationList()
 }  
+
+
+document.querySelector('.btn').addEventListener('click', getCurrLocation)
+
+function getCurrLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
+        var currLoc = {
+            lat:position.coords.latitude, 
+            lng:position.coords.longitude
+        };
+        gMap.setCenter(currLoc);
+    });
+}
