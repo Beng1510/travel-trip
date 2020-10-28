@@ -2,7 +2,7 @@
 const APIkey = 'AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y'
 const PLACES_DB = "locationDB"
 
-var gPlaces =[]
+var gPlaces = []
 
 export const mapService = {
     getLocs,
@@ -10,11 +10,12 @@ export const mapService = {
     addLocation,
     _createPlace,
     getLocationsForDisplay,
-    getCoordsById
+    getCoordsById,
+    deleteLoc
 
 }
 
-import {storageService} from './storage-service.js'
+import { storageService } from './storage-service.js'
 
 
 var locs = [{ lat: 11.22, lng: 22.11 }]
@@ -68,18 +69,28 @@ function getLocationsForDisplay() {
 
 
 
-   
 
-    function getCoordsById(ev) {
-        const placeId = ev.target.id
-        // console.log('eventbutton1',ev);
-        console.log('ev.target.id',ev.target.id);
 
-        const place = gPlaces.find((place) => {
-            console.log('place',place);
-            return placeId === place.id
-        })    
-        return place    
-    }
+function getCoordsById(ev) {
+    const placeId = ev.target.id
+    // console.log('eventbutton1',ev);
+    console.log('ev.target.id', ev.target.id);
 
-   
+    const place = gPlaces.find((place) => {
+        console.log('place', place);
+        return placeId === place.id
+    })
+    return place
+}
+
+function deleteLoc(ev) {
+    const placeId = ev.target.id
+    console.log('placeId', placeId);
+    console.log('gPlaces', gPlaces);
+    
+    const idx = gPlaces.findIndex(place => placeId === place.id)
+    gPlaces.splice(idx,1);
+    storageService.saveToStorage(PLACES_DB, gPlaces);
+
+}
+
