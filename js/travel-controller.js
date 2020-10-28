@@ -50,8 +50,16 @@ export function initMap() {
                 center: myLatlng,
                 zoom: 15
             })
-            // console.log('Map!', gMap);
+            
             gMap.addListener('click', getNewLocation)
+
+            const geocoder = new google.maps.Geocoder();
+
+            document.getElementById("submit").addEventListener("click", () => {
+                searchAddress(geocoder, gMap);
+            });
+            
+            // document.getElementById("submit").addEventListener("click", searchLoc)
 
         })
 
@@ -147,7 +155,6 @@ function renderLocationList() {
             </button>
             </td>
             </tr>`
-        // document.querySelector(`#${location.id}`).addEventListener('click', panTo)
     })
     document.querySelector('.location-body').innerHTML = strHTML
 
@@ -159,7 +166,7 @@ function renderLocationList() {
     var delBtns = document.querySelectorAll('.delete-btn')
     delBtns.forEach(delBtn => {
         delBtn.addEventListener('click', onDeleteLoc)
-    } )
+    })
 }
 
 
@@ -175,7 +182,7 @@ function panTo(ev) {
 function onDeleteLoc(ev) {
     mapService.deleteLoc(ev)
     renderLocationList()
-}  
+}
 
 
 document.querySelector('.btn').addEventListener('click', getCurrLocation)
@@ -183,9 +190,29 @@ document.querySelector('.btn').addEventListener('click', getCurrLocation)
 function getCurrLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
         var currLoc = {
-            lat:position.coords.latitude, 
-            lng:position.coords.longitude
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
         };
         gMap.setCenter(currLoc);
     });
 }
+
+
+
+function searchAddress(geocoder, resultsMap) {
+    const address = document.getElementById("address").value;
+    geocoder.geocode({ address: address }, (results, status) => {
+      if (status === "OK") {
+        resultsMap.setCenter(results[0].geometry.location);
+        new google.maps.Marker({
+          map: resultsMap,
+          position: results[0].geometry.location,
+        });
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  }
+
+
+
