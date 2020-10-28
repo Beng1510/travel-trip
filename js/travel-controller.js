@@ -93,10 +93,7 @@ function addMarker(loc) {
     return marker;
 }
 
-function panTo(lat, lng) {
-    var laLatLng = new google.maps.LatLng(lat, lng);
-    gMap.panTo(laLatLng);
-}
+
 
 function getPosition() {
     console.log('Getting Pos');
@@ -150,18 +147,18 @@ function renderLocationList() {
     })
     document.querySelector('.location-body').innerHTML = strHTML
 
+    // document.querySelector('.go-to').addEventListener('click', mapService.getCoordsById)
+    document.querySelector('.go-to').addEventListener('click', panTo)
+
 }
 
-document.querySelector('.go-to').addEventListener('click', getCoordsById)
-  
+function panTo(ev) {
+    var place = mapService.getCoordsById(ev)
+    // console.log('newplace', place);
 
-    // console.log('Aha!', ev.target);
-    // panTo(lat, lng);
-    // })
-
-
-function getCoordsById(event) {
-    console.log('eventbutton',event);
-    // var $el = $(event.target)
-    
+    var laLatLng = new google.maps.LatLng(place.lat, place.lng);
+    gMap.panTo(laLatLng);
 }
+
+
+// panTo(place.lat, place.lng);   

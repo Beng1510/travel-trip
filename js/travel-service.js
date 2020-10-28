@@ -9,7 +9,8 @@ export const mapService = {
     makeNewLocation,
     addLocation,
     _createPlace,
-    getLocationsForDisplay
+    getLocationsForDisplay,
+    getCoordsById
 
 }
 
@@ -64,3 +65,21 @@ function _createPlace(results) {
 function getLocationsForDisplay() {
     return gPlaces
 }
+
+
+
+   
+
+    function getCoordsById(ev) {
+        const placeId = ev.target.id
+        // console.log('eventbutton1',ev);
+        console.log('ev.target.id',ev.target.id);
+
+        const place = gPlaces.find((place) => {
+            console.log('place',place);
+            return placeId === place.id
+        })    
+        return place    
+    }
+
+   
