@@ -31,8 +31,8 @@ window.onload = () => {
 }
 
 // document.querySelector('.btn').addEventListener('click', (ev) => {
-    // console.log('Aha!', ev.target);
-    // panTo(35.6895, 139.6917);
+// console.log('Aha!', ev.target);
+// panTo(35.6895, 139.6917);
 // })
 
 
@@ -51,34 +51,37 @@ export function initMap() {
                 zoom: 15
             })
             // console.log('Map!', gMap);
-
+            gMap.addListener('click', getNewLocation)
 
         })
 
 
 }
 
-document.querySelector('#map').addEventListener('click', getNewLocation)
+// document.querySelector('#map').addEventListener('click', getNewLocation)
+// gMap.addListener('click', getNewLocation)
 
 
 
 function getNewLocation(event) {
-console.log('event',event);
+    console.log('event', event);
 
-    gMap.addEventListener('click', function (event) {
-        console.log('event2', event);
-        var myLatlng = {
-            lat: event.latLng.lat(),
-            lng: event.latLng.lng()
-        }
+    // gMap.addListener('click', function (event) {
 
-        console.log('myLatlng', myLatlng);
+    console.log('event2', event);
+    var myLatlng = {
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng()
+    }
+    // var name = prompt('Enter place name:');
 
-        mapService.makeNewLocation(myLatlng.lat, myLatlng.lng)
-            .then(onAddLocation)
-        // addLocation(name, myLatlng);
-        // gMap.setCenter(myLatlng);
-    });
+    console.log('myLatlng', myLatlng);
+
+    mapService.makeNewLocation(myLatlng.lat, myLatlng.lng)
+        .then(onAddLocation)
+    // addLocation(name, myLatlng);
+    // gMap.setCenter(myLatlng);
+    // });
 }
 
 function addMarker(loc) {
@@ -126,19 +129,39 @@ function onAddLocation(results) {
 
 
 function renderLocationList() {
-    
-    var locations = mapService.getLocationsForDisplay() 
-        console.log('loations',locations);
-        var strHTML = locations.map(location => {
+
+    var locations = mapService.getLocationsForDisplay()
+    console.log('loations', locations);
+
+    var strHTML = ''
+    locations.forEach(location => {
+        strHTML +=
             `<tr>
-            <td>${location.name}</td>
+            <td>${location.name} </td>
             <td>${location.id}</td>
-            <td>$${location.lat}</td>
+            <td>${location.lat}</td>
             <td>${location.lng}</td>
+            <td>
+            <button id="${location.id}" class="go-to">
+            Go to location
+            </button>
+            </td>
             </tr>`
-        })
-        document.querySelector('.location-body').innerHTML = strHTML.join('');
+    })
+    document.querySelector('.location-body').innerHTML = strHTML
+
 }
 
+document.querySelector('.go-to').addEventListener('click', getCoordsById)
+  
+
+    // console.log('Aha!', ev.target);
+    // panTo(lat, lng);
+    // })
 
 
+function getCoordsById(event) {
+    console.log('eventbutton',event);
+    // var $el = $(event.target)
+    
+}
