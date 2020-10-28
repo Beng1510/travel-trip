@@ -1,9 +1,19 @@
 
+const APIkey = 'AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y'
+const PLACES_DB = "locationDB"
+
+var gPlaces =[]
 
 export const mapService = {
     getLocs,
-    makeNewLocation
+    makeNewLocation,
+    addLocation,
+    _createPlace,
+    getLocationsForDisplay
+
 }
+
+import {storageService} from './storage-service.js'
 
 
 var locs = [{ lat: 11.22, lng: 22.11 }]
@@ -17,11 +27,40 @@ function getLocs() {
 }
 
 
-function makeNewLocation(lat, lng){
-    console.log('lat',lat);
+function makeNewLocation(lat, lng) {
+    console.log('lat', lat);
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y`)
-    .then(res => console.log(res)) 
-    // .then(data => console.log('newlocation',data))
+        .then(res => res.data)
+        .then(data => data.results)
+
 }
 
-// https://maps.googleapis.com/maps/api/js?key=AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y&callback=initMap&libraries=&v=weekly
+function addLocation(results) {
+    console.log('results???', results);
+
+    var newPlace = _createPlace(results);
+
+    console.log('newPlace', newPlace);
+    gPlaces.push(newPlace);
+
+    console.log('gPlaces', gPlaces);
+
+    storageService.saveToStorage(PLACES_DB, gPlaces);
+    // onAddPlace();
+}
+
+function _createPlace(results) {
+    // console.log('res',results[0]);
+
+    return {
+        id: results[0].place_id,
+        name: results[0].formatted_address,
+        lat: results[0].geometry.location.lat,
+        lng: results[0].geometry.location.lng
+    }
+}
+
+
+function getLocationsForDisplay() {
+    return gPlaces
+}

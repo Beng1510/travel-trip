@@ -4,7 +4,7 @@
 import { mapService } from './travel-service.js'
 
 
-var gPlaces;
+
 var gMap;
 
 // console.log('Main!');
@@ -30,10 +30,10 @@ window.onload = () => {
         })
 }
 
-document.querySelector('.btn').addEventListener('click', (ev) => {
-    console.log('Aha!', ev.target);
-    panTo(35.6895, 139.6917);
-})
+// document.querySelector('.btn').addEventListener('click', (ev) => {
+    // console.log('Aha!', ev.target);
+    // panTo(35.6895, 139.6917);
+// })
 
 
 export function initMap() {
@@ -63,9 +63,10 @@ document.querySelector('#map').addEventListener('click', getNewLocation)
 
 
 function getNewLocation(event) {
+console.log('event',event);
 
-    gMap.addListener('click', function (event) {
-        console.log('event', event);
+    gMap.addEventListener('click', function (event) {
+        console.log('event2', event);
         var myLatlng = {
             lat: event.latLng.lat(),
             lng: event.latLng.lng()
@@ -73,10 +74,8 @@ function getNewLocation(event) {
 
         console.log('myLatlng', myLatlng);
 
-        var name = prompt('Enter place name:');
-
         mapService.makeNewLocation(myLatlng.lat, myLatlng.lng)
-
+            .then(onAddLocation)
         // addLocation(name, myLatlng);
         // gMap.setCenter(myLatlng);
     });
@@ -120,17 +119,26 @@ function _connectGoogleApi() {
 }
 
 
-function addLocation(name, latLng) {
-    var newPlace = _createPlace(name, latLng);
-    gPlaces.push(newPlace);
-    // saveToStorage(PLACES_DB,gPlaces);
-    // onAddPlace();
+function onAddLocation(results) {
+    mapService.addLocation(results)
+    renderLocationList()
 }
 
-function _createPlace(name, latLng) {
-    return {
-        id: makeId(),
-        name,
-        latLng
-    }
+
+function renderLocationList() {
+    
+    var locations = mapService.getLocationsForDisplay() 
+        console.log('loations',locations);
+        var strHTML = locations.map(location => {
+            `<tr>
+            <td>${location.name}</td>
+            <td>${location.id}</td>
+            <td>$${location.lat}</td>
+            <td>${location.lng}</td>
+            </tr>`
+        })
+        document.querySelector('.location-body').innerHTML = strHTML.join('');
 }
+
+
+
