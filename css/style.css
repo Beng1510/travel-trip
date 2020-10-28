@@ -1,3 +1,44 @@
 * {
     box-sizing: border-box;
 }
+
+body {
+    margin: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #f2e8cf;
+}
+
+header {
+    width: 100%;
+    min-height: 4rem;
+    background-color: #386641;
+    color: #f2e8cf;
+    padding: 1rem 0 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+h1.travel-trip {
+    margin-inline-start: 0.8rem;
+}
+
+.map {
+    margin: 1rem auto;
+}
+
+.my-locations table {
+    background-color: #6A994E;
+    color: #f2e8cf;
+    max-width: max-content;
+    margin: 1rem auto;
+}
+
+.my-locations th {
+    border-bottom: 2px solid #f2e8cf;
+}
+
+.my-locations td {
+    border-collapse: collapse;
+    padding: 0.5rem ;
+}
