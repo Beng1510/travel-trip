@@ -1,12 +1,18 @@
 
 
-export const mapServices = {
-    loadMap
+export const mapService = {
+    getLocs: getLocs,
 }
 
 
-function loadMap() {
-    return axios.get('https://maps.googleapis.com/maps/api/js?key=AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y&callback=mapReady')
-        .then(res => res.data)
+var locs = [{ lat: 11.22, lng: 22.11 }]
+
+function getLocs() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(locs);
+        }, 2000)
+    });
 }
+
 
