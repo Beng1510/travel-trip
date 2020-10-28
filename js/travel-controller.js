@@ -1,12 +1,13 @@
 'use strict'
 
 
-import {mapService} from './travel-service.js'
+import { mapService } from './travel-service.js'
+
 
 var gPlaces;
 var gMap;
 
-console.log('Main!');
+// console.log('Main!');
 
 mapService.getLocs()
     .then(locs => console.log('locs', locs))
@@ -37,7 +38,7 @@ document.querySelector('.btn').addEventListener('click', (ev) => {
 
 export function initMap() {
 
-var myLatlng = {lat: 32.0749831, lng: 34.9120554}
+    var myLatlng = { lat: 32.0749831, lng: 34.9120554 }
 
     console.log('InitMap');
 
@@ -50,32 +51,34 @@ var myLatlng = {lat: 32.0749831, lng: 34.9120554}
                 zoom: 15
             })
             // console.log('Map!', gMap);
-            
-           
+
+
         })
 
 
 }
 
-document.querySelector('#map').addEventListener('click',getNewLocation)
+document.querySelector('#map').addEventListener('click', getNewLocation)
 
 
 
-function getNewLocation() {
+function getNewLocation(event) {
 
-    gMap.addListener('click', function (mapsMouseEvent) {
-        console.log('mapsMouseEvent',mapsMouseEvent);
-        myLatlng = {
-            lat: mapsMouseEvent.latLng.lat(),
-            lng: mapsMouseEvent.latLng.lng()
+    gMap.addListener('click', function (event) {
+        console.log('event', event);
+        var myLatlng = {
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng()
         }
-        
-        console.log('myLatlng',myLatlng);
+
+        console.log('myLatlng', myLatlng);
 
         var name = prompt('Enter place name:');
 
-        addLocation(name, myLatlng);
-        gMap.setCenter(myLatlng);
+        mapService.makeNewLocation(myLatlng.lat, myLatlng.lng)
+
+        // addLocation(name, myLatlng);
+        // gMap.setCenter(myLatlng);
     });
 }
 
@@ -117,14 +120,14 @@ function _connectGoogleApi() {
 }
 
 
-function addLocation(name, latLng){
+function addLocation(name, latLng) {
     var newPlace = _createPlace(name, latLng);
     gPlaces.push(newPlace);
     // saveToStorage(PLACES_DB,gPlaces);
-    onAddPlace();
+    // onAddPlace();
 }
 
-function _createPlace(name, latLng){
+function _createPlace(name, latLng) {
     return {
         id: makeId(),
         name,

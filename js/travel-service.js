@@ -1,7 +1,8 @@
 
 
 export const mapService = {
-    getLocs: getLocs,
+    getLocs,
+    makeNewLocation
 }
 
 
@@ -16,6 +17,11 @@ function getLocs() {
 }
 
 
+function makeNewLocation(lat, lng){
+    console.log('lat',lat);
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y`)
+    .then(res => console.log(res)) 
+    // .then(data => console.log('newlocation',data))
+}
 
-
-// https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
+// https://maps.googleapis.com/maps/api/js?key=AIzaSyD_E_dcrekWZNXaKc2mSKc3dnN31bk_L2Y&callback=initMap&libraries=&v=weekly
